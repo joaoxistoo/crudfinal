@@ -40,6 +40,10 @@ int contadorDeDisciplinas = 0;
 int contadorDeInscricoes = 0;
 
 // Protótipos das funções
+void excluirTipoCurso(struct TipoCurso tiposCurso[MAX_TIPOCURSO]);
+void excluirDisciplinas(struct Disciplina disciplinas[MAX_DISCIPLINAS]);
+void atualizarInscricao(struct InscricaoDisciplina inscricoes[MAX_INSCRICAO]);
+void excluirInscricao(struct InscricaoDisciplina inscricoes[MAX_INSCRICAO]);
 void criarAluno(struct Aluno alunos[MAX_ALUNOS]);
 void listarAlunos(struct Aluno alunos[MAX_ALUNOS]);
 void atualizarAluno(struct Aluno alunos[MAX_ALUNOS]);
@@ -108,6 +112,7 @@ void menuTiposCurso(struct TipoCurso tiposCurso[MAX_TIPOCURSO]) {
         printf("1. Criar Tipo de Curso\n");
         printf("2. Listar Tipos de Curso\n");
         printf("3. Atualizar Tipo de Curso\n");
+        printf("4. Excluir Tipo de Curso\n");
         printf("0. Voltar ao Menu Principal\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
@@ -121,6 +126,9 @@ void menuTiposCurso(struct TipoCurso tiposCurso[MAX_TIPOCURSO]) {
                 break;
             case 3:
                 atualizarTipoCurso(tiposCurso);
+                break;
+            case 4:
+                excluirTipoCurso(tiposCurso);
                 break;
             case 0:
                 return;
@@ -174,6 +182,7 @@ void menuDisciplinas(struct Disciplina disciplinas[MAX_DISCIPLINAS]) {
         printf("1. Criar Disciplinas\n");
         printf("2. Listar Disciplinas\n");
         printf("3. Atualizar Disciplinas\n");
+        printf("4. Excluir Disciplinas\n");
         printf("0. Sair\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
@@ -187,6 +196,10 @@ void menuDisciplinas(struct Disciplina disciplinas[MAX_DISCIPLINAS]) {
                 break;
             case 3:
                 atualizarDisciplina(disciplinas);
+                break;
+                
+            case 4:
+                excluirDisciplinas(disciplinas);
                 break;
             case 0:
                 printf("Saindo do programa.\n");
@@ -204,6 +217,8 @@ void menuInscricao(struct InscricaoDisciplina inscricoes[MAX_INSCRICAO]) {
         printf("\nMENU INSCRICAO DE ALUNOS EM DISCIPLINA\n");
         printf("1. Criar Inscricao\n");
         printf("2. Listar Inscricoes\n");
+        printf("3. Atualizar inscricoes\n");
+        printf("4. Excluir inscricoes\n");
         printf("0. Voltar ao Menu Principal\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
@@ -215,6 +230,10 @@ void menuInscricao(struct InscricaoDisciplina inscricoes[MAX_INSCRICAO]) {
             case 2:
                 listarInscricoes(inscricoes);
                 break;
+            case 3:
+                atualizarInscricao(inscricoes);
+            case 4:
+                excluirInscricao(inscricoes);
             case 0:
                 return;
             default:
@@ -359,6 +378,35 @@ void listarDisciplinas(struct Disciplina disciplinas[MAX_DISCIPLINAS]) {
     }
 }
 
+void excluirDisciplinas(struct Disciplina disciplinas[MAX_DISCIPLINAS]){
+    char codigoParaExcluir[20];
+    printf("Digite o código da disciplina que deseja excluir: ");
+    scanf("%s", codigoParaExcluir);
+
+    int indiceParaExcluir = -1;
+
+    // Isso aqui procura o índice da disciplina com base no código meu bom.
+    for (int i = 0; i < contadorDeDisciplinas; i++) {
+        if (strcmp(disciplinas[i].codigoDisciplina, codigoParaExcluir) == 0) {
+            indiceParaExcluir = i;
+            break;
+        }
+    }
+
+    // Isso aqui remove a disciplina se ela for encontrada
+    if (indiceParaExcluir != -1) {
+        for (int i = indiceParaExcluir; i < contadorDeDisciplinas - 1; i++) {
+            disciplinas[i] = disciplinas[i + 1];
+        }
+
+        contadorDeDisciplinas--;
+        printf("Disciplina excluída com sucesso!\n");
+    } else {
+        printf("Disciplina não encontrada.\n");
+    }
+    
+}
+
 void atualizarDisciplina(struct Disciplina disciplinas[MAX_DISCIPLINAS]) {
     char codigoParaAtualizar[100];
     printf("Digite o código da disciplina que deseja atualizar: ");
@@ -425,6 +473,61 @@ void listarInscricoes(struct InscricaoDisciplina inscricoes[MAX_INSCRICAO]) {
     }
 }
 
+void atualizarInscricao(struct InscricaoDisciplina inscricoes[MAX_INSCRICAO]) {
+    char matriculaParaAtualizar[20];
+    printf("Digite a matrícula do aluno para atualizar a inscrição: ");
+    scanf("%s", matriculaParaAtualizar);
+
+    int indiceParaAtualizar = -1;
+
+    // Procurar o índice da inscrição com base na matrícula do aluno
+    for (int i = 0; i < contadorDeInscricoes; i++) {
+        if (strcmp(inscricoes[i].matricula, matriculaParaAtualizar) == 0) {
+            indiceParaAtualizar = i;
+            break;
+        }
+    }
+
+    // Esse Atualiza a inscrição se ela for encontrada
+    if (indiceParaAtualizar != -1) {
+        printf("Digite a nova data de inscrição: ");
+        scanf("%s", inscricoes[indiceParaAtualizar].dataInscricao);
+
+        printf("Inscrição atualizada com sucesso!\n");
+    } else {
+        printf("Inscrição não encontrada.\n");
+    }
+}
+
+void excluirInscricao(struct InscricaoDisciplina inscricoes[MAX_INSCRICAO]) {
+    char matriculaParaExcluir[20];
+    printf("Digite a matrícula do aluno para excluir a inscrição: ");
+    scanf("%s", matriculaParaExcluir);
+
+    int indiceParaExcluir = -1;
+
+    // Essa porra aqui procura o índice da inscrição com base na matrícula do aluno
+    for (int i = 0; i < contadorDeInscricoes; i++) {
+        if (strcmp(inscricoes[i].matricula, matriculaParaExcluir) == 0) {
+            indiceParaExcluir = i;
+            break;
+        }
+    }
+
+    // Isso aqui só remove inscrição se ela for encontrada
+    if (indiceParaExcluir != -1) {
+        // Deslocar as inscrições à frente do índice para preencher o espaço
+        for (int i = indiceParaExcluir; i < contadorDeInscricoes - 1; i++) {
+            inscricoes[i] = inscricoes[i + 1];
+        }
+
+        contadorDeInscricoes--;
+        printf("Inscrição excluída com sucesso!\n");
+    } else {
+        printf("Inscrição não encontrada.\n");
+    }
+}
+
 void criarTipoCurso(struct TipoCurso tiposCurso[MAX_TIPOCURSO]) {
     struct TipoCurso novoTipoCurso;
     printf("Insira as informações do tipo de curso:\n");
@@ -484,5 +587,31 @@ void atualizarTipoCurso(struct TipoCurso tiposCurso[MAX_TIPOCURSO]) {
 
     if (!encontrado) {
         printf("Tipo de curso com código %s não foi encontrado.\n", codigoParaAtualizar);
+    }
+}
+
+void excluirTipoCurso(struct TipoCurso tiposCurso[MAX_TIPOCURSO]) {
+    char codigoParaExcluir[100];
+    printf("Digite o código do tipo de curso que deseja excluir: ");
+    scanf("%s", codigoParaExcluir);
+
+    int indiceParaExcluir = -1;
+
+    for (int i = 0; i < contadorDeTiposCurso; i++) {
+        if (strcmp(tiposCurso[i].codigoTipoCurso, codigoParaExcluir) == 0) {
+            indiceParaExcluir = i;
+            break;
+        }
+    }
+
+    if (indiceParaExcluir != -1) {
+        for (int i = indiceParaExcluir; i < contadorDeTiposCurso - 1; i++) {
+            tiposCurso[i] = tiposCurso[i + 1];
+        }
+
+        contadorDeTiposCurso--;
+        printf("Tipo de curso excluído com sucesso!\n");
+    } else {
+        printf("Tipo de curso com código %s não foi encontrado.\n", codigoParaExcluir);
     }
 }
